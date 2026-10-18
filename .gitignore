@@ -1,0 +1,29 @@
+# Environment — never commit
+.env
+.env.*
+!.env.example
+
+# Build output
+dist/
+contracts/out/
+contracts/cache/
+
+# Test artifacts (Playwright)
+test-results/
+playwright-report/
+
+# Dependencies
+node_modules/
+lib/
+
+# Foundry broadcast logs
+broadcast/
+
+# OS / editor
+.DS_Store
+*.swp
+.idea/
+.vscode/
+
+# Local debug logs
+console.jsonl
