@@ -291,11 +291,15 @@ The safety banner disappears and the Send button activates once this is set.
 
 ## Notes for reviewers
 
-- `src/contract.ts` — ABI extracted verbatim from the Foundry artifact
-  (`contracts/out/PaymentSplitter.sol/PaymentSplitter.json`), verified to
-  match the contract source exactly.
-- `src/onchain-facts.ts` — generated module containing Arc Mainnet chain
-  config, RPC URL, explorer URL, and USDC address. Do not edit manually.
-- The `.env` file must not be committed. It contains sandbox-internal
-  configuration; no application secrets are required to run the app locally.
-- A `.gitignore` is included. A git repository has not been initialised.
+- `src/contract.ts` contains the contract ABI and deployment-address placeholder. `PAYMENT_SPLITTER_ADDRESS` is currently `null`.
+- `src/onchain-facts.ts` contains the Arc Mainnet configuration, RPC URL, explorer URL, and USDC token address.
+- Arc Mainnet chain ID: `5042`.
+- USDC ERC-20 address: `0x3600000000000000000000000000000000000000` (6 decimals).
+- The contract was reviewed using tool-assisted analysis, Slither static analysis, and automated tests. This is not a formal independent security audit.
+- Foundry contract tests: 26 passed.
+- Vitest frontend unit tests: 65 passed.
+- Playwright browser tests are written but have not yet been executed because required system libraries were unavailable in the build environment.
+- The contract has not been deployed to Arc Mainnet. No mainnet transaction has been sent, and no real USDC has been used.
+- The Send button remains disabled until a verified deployed contract address is configured.
+- The `.env` file is excluded from version control. Never commit private keys, seed phrases, passwords, or other secrets.
+- A `.gitignore` file is included. The public source repository is available at https://github.com/Dringim1/arc-splitpay.
