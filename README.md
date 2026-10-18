@@ -241,10 +241,8 @@ approve/split/receipt flow.
 Full report: [`docs/security-review.md`](docs/security-review.md)
 Integration review: [`docs/integration-review.md`](docs/integration-review.md)
 
-The review comprised: two independent auditors working from the contract
-source, Slither static analysis run twice (before and after fixes), and the
-26-test Foundry suite covering unit tests, 256-run fuzz campaigns, and a
-128,000-call invariant.
+The contract was reviewed using tool-assisted analysis, Slither static analysis (run twice, before and after fixes), and the 26-test Foundry suite covering unit tests, 256-run fuzz campaigns, and a 128,000-call invariant. This is not a formal independent security audit.
+
 
 | # | Finding | Severity | Status |
 |---|---|---|---|
@@ -255,7 +253,7 @@ source, Slither static analysis run twice (before and after fixes), and the
 | 5 | Slither `reentrancy-events` — event emitted after external calls | Low | Accepted (false positive — stateless contract) |
 | 6 | Slither `cyclomatic-complexity` | Informational | Accepted |
 
-Both auditors returned no material findings on the final contract.
+No material findings were identified on the final contract.
 
 ---
 
