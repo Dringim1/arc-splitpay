@@ -58,4 +58,5 @@ export const PAYMENT_SPLITTER_ABI = [
 // Until this is set the app shows a "Contract not deployed" banner and
 // disables the Send button.
 
-export const PAYMENT_SPLITTER_ADDRESS: `0x${string}` | null = null
+export const PAYMENT_SPLITTER_ADDRESS: `0x${string}` | null =
+  '0xACef190f35C40C7E7e3Cf1aF4aD7b3dC60E35Dd1'

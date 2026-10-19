@@ -8,9 +8,10 @@ enter a USDC amount, and Arc SplitPay distributes the funds atomically
 through a single smart contract call. Every recipient receives their share,
 or no one does.
 
-> **Status: contract reviewed and tested. Not yet deployed.**
-> `PAYMENT_SPLITTER_ADDRESS` is `null`. The Send button is disabled until
-> a verified deployment address is configured. No real USDC has been used.
+> **Status: deployed to Arc Mainnet. A real-USDC split has been verified end-to-end.**
+> Contract: [`0xACef190f35C40C7E7e3Cf1aF4aD7b3dC60E35Dd1`](https://explorer.arc.io/address/0xACef190f35C40C7E7e3Cf1aF4aD7b3dC60E35Dd1)
+> Deployment tx: [`0x61ddc287…cad4f9`](https://explorer.arc.io/tx/0x61ddc2879a8e9ba39dea4decfa216f04ba849bcee09f40a2ed7e7ca3d0cad4f9)
+> Playwright browser tests have been written but have not been executed.
 
 ---
 
@@ -59,7 +60,7 @@ transaction. If any transfer fails, the whole call reverts.
 ```
 src/
   App.tsx                     # Orchestration: wallet state, approve→split flow
-  contract.ts                 # ABI (from Foundry artifact) + address placeholder
+  contract.ts                 # ABI (from Foundry artifact) + deployed contract address
   config.ts                   # wagmi config: Arc Mainnet (5042) + Ethereum for ENS
   utils/splitPayUtils.ts      # Pure functions: validation, share math, error parsing
   components/
@@ -149,8 +150,8 @@ bun run dev
 # Opens at http://localhost:5173
 ```
 
-The app loads showing a "Contract not deployed" warning banner.
-The Send button is disabled. This is the correct pre-deployment state.
+The app loads connected to the deployed contract on Arc Mainnet.
+Connect a wallet on chain ID 5042 to use it.
 
 ### Scripts
 
@@ -209,6 +210,20 @@ module). Covers: `percentToBps`, `bpsToPercent`, `bpsTotal`,
 `computeShares` integer arithmetic (verified to match the Solidity contract
 output), `parseOnchainError` for all 7 custom errors, and `shortAddr`.
 
+### Live mainnet split — verified 2026-10-19
+
+A real-USDC split was executed on Arc Mainnet and confirmed via the block
+explorer. The app displayed "Payment split successfully."
+
+| Field | Value |
+|---|---|
+| Network | Arc Mainnet (chain ID 5042) |
+| Contract | `0xACef190f35C40C7E7e3Cf1aF4aD7b3dC60E35Dd1` |
+| Split tx | [`0xd1b3c6f9…632e68`](https://explorer.arc.io/tx/0xd1b3c6f9c82d6a69de851aa1ed401213c94109d46a2f648e1b433dc607632e68) |
+| Amount | 0.02 USDC |
+| Recipients | 2 (50% / 50%) |
+| Observed transfers | Sender → contract: 0.02 USDC; contract → recipient 1: 0.01 USDC; contract → recipient 2: 0.01 USDC |
+
 ### Browser tests (Playwright) — written; not yet executed
 
 26 tests across 8 scenario groups are in `tests/splitpay.spec.ts`. A
@@ -228,9 +243,8 @@ bun run test:e2e
 ```
 
 Of the 26 tests, 20 are fully exercisable with the mock wallet alone
-(rendering, validation, wrong-chain, disconnected state, undeployed banner).
-The remaining 6 require a deployed contract address to exercise the full
-approve/split/receipt flow.
+(rendering, validation, wrong-chain, disconnected state). The remaining 6
+exercise the full approve/split/receipt flow against the deployed contract.
 
 **These tests are not claimed to have passed. They have not run.**
 
@@ -241,8 +255,10 @@ approve/split/receipt flow.
 Full report: [`docs/security-review.md`](docs/security-review.md)
 Integration review: [`docs/integration-review.md`](docs/integration-review.md)
 
-The contract was reviewed using tool-assisted analysis, Slither static analysis (run twice, before and after fixes), and the 26-test Foundry suite covering unit tests, 256-run fuzz campaigns, and a 128,000-call invariant. This is not a formal independent security audit.
-
+The contract was reviewed using tool-assisted analysis, Slither static analysis
+(run twice, before and after fixes), and the 26-test Foundry suite covering unit
+tests, 256-run fuzz campaigns, and a 128,000-call invariant. This is not a formal
+independent security audit.
 
 | # | Finding | Severity | Status |
 |---|---|---|---|
@@ -257,47 +273,41 @@ No material findings were identified on the final contract.
 
 ---
 
-## Deployment status
+## Deployment
 
-> **The contract is not deployed.**
-> `PAYMENT_SPLITTER_ADDRESS` in `src/contract.ts` is `null`.
-> No mainnet transaction has been sent. No real USDC has been used.
+| Item | Value |
+|---|---|
+| Network | Arc Mainnet (chain ID 5042) |
+| Contract address | [`0xACef190f35C40C7E7e3Cf1aF4aD7b3dC60E35Dd1`](https://explorer.arc.io/address/0xACef190f35C40C7E7e3Cf1aF4aD7b3dC60E35Dd1) |
+| Deployment tx | [`0x61ddc287…cad4f9`](https://explorer.arc.io/tx/0x61ddc2879a8e9ba39dea4decfa216f04ba849bcee09f40a2ed7e7ca3d0cad4f9) |
+| USDC address | `0x3600000000000000000000000000000000000000` |
+| `PAYMENT_SPLITTER_ADDRESS` in `src/contract.ts` | Set to the address above |
 
-After deploying the contract from your own wallet and verifying it on-chain,
-set the address in `src/contract.ts`:
-
-```ts
-// Replace null with the verified deployed address
-export const PAYMENT_SPLITTER_ADDRESS = '0xYourDeployedAddress' as `0x${string}`
-```
-
-The safety banner disappears and the Send button activates once this is set.
+The contract address was verified on-chain before being set: `eth_getCode`
+confirmed deployed bytecode, and `USDC()` returned
+`0x3600000000000000000000000000000000000000`.
 
 ---
 
-## Outstanding items before mainnet use
+## Outstanding items
 
 | Item | Status |
 |---|---|
-| Deploy contract to Arc Mainnet | Not done |
-| Set `PAYMENT_SPLITTER_ADDRESS` | Not done — value is `null` |
+| Deploy contract to Arc Mainnet | Done — `0xACef190f35C40C7E7e3Cf1aF4aD7b3dC60E35Dd1` |
+| Set `PAYMENT_SPLITTER_ADDRESS` | Done — configured in `src/contract.ts` |
+| Real-USDC split verified end-to-end | Done — [tx `0xd1b3c6f9…632e68`](https://explorer.arc.io/tx/0xd1b3c6f9c82d6a69de851aa1ed401213c94109d46a2f648e1b433dc607632e68) |
 | Run Playwright browser tests | Not done — blocked by missing system libraries |
-| Manual end-to-end test with real USDC | Not done |
 | Add a LICENSE file | Not done |
 
 ---
 
 ## Notes for reviewers
 
-- `src/contract.ts` contains the contract ABI and deployment-address placeholder. `PAYMENT_SPLITTER_ADDRESS` is currently `null`.
-- `src/onchain-facts.ts` contains the Arc Mainnet configuration, RPC URL, explorer URL, and USDC token address.
-- Arc Mainnet chain ID: `5042`.
-- USDC ERC-20 address: `0x3600000000000000000000000000000000000000` (6 decimals).
-- The contract was reviewed using tool-assisted analysis, Slither static analysis, and automated tests. This is not a formal independent security audit.
-- Foundry contract tests: 26 passed.
-- Vitest frontend unit tests: 65 passed.
-- Playwright browser tests are written but have not yet been executed because required system libraries were unavailable in the build environment.
-- The contract has not been deployed to Arc Mainnet. No mainnet transaction has been sent, and no real USDC has been used.
-- The Send button remains disabled until a verified deployed contract address is configured.
-- The `.env` file is excluded from version control. Never commit private keys, seed phrases, passwords, or other secrets.
-- A `.gitignore` file is included. The public source repository is available at https://github.com/Dringim1/arc-splitpay.
+- `src/contract.ts` — ABI extracted verbatim from the Foundry artifact
+  (`contracts/out/PaymentSplitter.sol/PaymentSplitter.json`), verified to
+  match the contract source exactly.
+- `src/onchain-facts.ts` — generated module containing Arc Mainnet chain
+  config, RPC URL, explorer URL, and USDC address. Do not edit manually.
+- The `.env` file must not be committed. It contains sandbox-internal
+  configuration; no application secrets are required to run the app locally.
+- A `.gitignore` is included.
