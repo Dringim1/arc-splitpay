@@ -52,11 +52,10 @@ export const PAYMENT_SPLITTER_ABI = [
 
 // ─── Address placeholder ─────────────────────────────────────────────────────
 //
-// Replace with the verified Arc Mainnet deployment address.
-// Example: export const PAYMENT_SPLITTER_ADDRESS = '0xYourDeployedAddress' as `0x${string}`
-//
-// Until this is set the app shows a "Contract not deployed" banner and
-// disables the Send button.
+// Deployed to Arc Mainnet (chain ID 5042).
+// Deployment tx: 0x61ddc2879a8e9ba39dea4decfa216f04ba849bcee09f40a2ed7e7ca3d0cad4f9
+// Verified on-chain: eth_getCode confirmed bytecode; USDC() returns
+// 0x3600000000000000000000000000000000000000.
 
 export const PAYMENT_SPLITTER_ADDRESS: `0x${string}` | null =
   '0xACef190f35C40C7E7e3Cf1aF4aD7b3dC60E35Dd1'
