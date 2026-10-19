@@ -9,6 +9,7 @@ through a single smart contract call. Every recipient receives their share,
 or no one does.
 
 > **Status: deployed to Arc Mainnet. A real-USDC split has been verified end-to-end.**
+> Live app: [arc-studio-1858acbd3f984d31a2b713bb.vercel.app](https://arc-studio-1858acbd3f984d31a2b713bb.vercel.app)
 > Contract: [`0xACef190f35C40C7E7e3Cf1aF4aD7b3dC60E35Dd1`](https://explorer.arc.io/address/0xACef190f35C40C7E7e3Cf1aF4aD7b3dC60E35Dd1)
 > Deployment tx: [`0x61ddc287…cad4f9`](https://explorer.arc.io/tx/0x61ddc2879a8e9ba39dea4decfa216f04ba849bcee09f40a2ed7e7ca3d0cad4f9)
 > Playwright browser tests have been written but have not been executed.
